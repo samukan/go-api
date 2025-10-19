@@ -1,0 +1,11 @@
+**/.DS_Store
+**/node_modules
+**/bin
+**/obj
+**/.git
+**/.vscode
+**/.idea
+**/*.log
+**/tmp
+**/coverage
+**/dist

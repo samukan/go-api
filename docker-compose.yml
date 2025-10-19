@@ -1,0 +1,21 @@
+version: '3.9'
+services:
+  mongo:
+    image: mongo:7
+    restart: unless-stopped
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo_data:/data/db
+  api:
+    build: .
+    environment:
+      - PORT=8080
+      - MONGO_URI=mongodb://mongo:27017
+      - MONGO_DB=goapi
+    ports:
+      - '8080:8080'
+    depends_on:
+      - mongo
+volumes:
+  mongo_data: {}
