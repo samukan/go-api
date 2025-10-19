@@ -1,0 +1,43 @@
+# --- Go build artifacts ---
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# Build outputs
+bin/
+build/
+dist/
+coverage/
+*.coverprofile
+*.cov
+*.prof
+
+# OS junk
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Editor/IDE
+.vscode/
+.idea/
+*.iml
+
+# Logs & temp
+*.log
+tmp/
+*.tmp
+
+# Dependencies (uncomment vendor/ if you choose to vendor)
+# vendor/
+
+# Environment files (keep an example checked in instead)
+.env
+.env.*
+!.env.example
+
+# Docker compose local overrides
+docker-compose.override.yml
