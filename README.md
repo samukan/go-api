@@ -41,7 +41,6 @@ docker compose up -d --build api
 Prereqs: Go 1.22+, a running MongoDB (local or Atlas), and a `.env` file.
 
 ```pwsh
-# Ensure Mongo is reachable (e.g., local: mongodb://localhost:27017 or Atlas URI in .env)
 go run ./...
 ```
 
