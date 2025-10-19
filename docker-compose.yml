@@ -9,10 +9,8 @@ services:
       - mongo_data:/data/db
   api:
     build: .
-    environment:
-      - PORT=8080
-      - MONGO_URI=mongodb://mongo:27017
-      - MONGO_DB=goapi
+    env_file:
+      - .env
     ports:
       - '8080:8080'
     depends_on:

@@ -9,6 +9,7 @@ import (
     _ "go-api/docs" // swagger docs
     swaggerFiles "github.com/swaggo/files"
     ginSwagger "github.com/swaggo/gin-swagger"
+    "github.com/joho/godotenv"
 
     "go-api/pkg/config"
     "go-api/pkg/db"
@@ -22,6 +23,9 @@ import (
 // @schemes http
 
 func main() {
+    // Load .env if present (no error if missing)
+    _ = godotenv.Load()
+
     // Load configuration
     cfg := config.Load()
 

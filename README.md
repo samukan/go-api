@@ -1,53 +1,55 @@
 # Go Animals API
 
-A simple REST API in Go (Gin) with MongoDB that supports CRUD, filtering, sorting, pagination, validation, Swagger docs, and Docker deployment.
+## What’s included
 
-## Features
+- Animals CRUD with extended fields: name, species, age, adopted, image, owner, location (GeoJSON Point)
+- Categories CRUD (name/category_name)
+- Species CRUD (name/species_name, category)
+- Advanced features (≥3):
+  - Flexible filtering (name or animal_name, species string or ObjectId, adopted)
+  - Sorting (createdAt, name, age, birthdate if present, animal_name)
+  - Pagination (page + limit)
+  - Validation using go-playground/validator
+- Swagger UI at `/swagger/index.html` (served from static `/openapi/doc.json`)
+- Dockerfile + docker-compose (includes MongoDB service for local dev)
 
-- CRUD for animals: name, species, age, adopted
-- Filtering by species/name/age/adopted
-- Sorting by createdAt/name/age, asc/desc
-- Pagination: page + limit
-- Validation using go-playground/validator
-- Swagger UI at /swagger/index.html
-- Dockerfile + docker-compose (includes MongoDB)
+## Quickstart (Docker)
 
-## Prerequisites
+1. Copy env file and fill in values (Atlas or local). For Atlas, set MONGO_URI to your connection string; for local compose Mongo, use mongodb://mongo:27017.
 
-- Go 1.22+
-- Docker (optional but recommended for easy setup)
-
-## Run locally
-
-1. Start MongoDB quickly with Docker Compose (optional but easiest):
+2. Start the stack:
 
 ```pwsh
-docker compose up -d mongo
+docker compose up -d --build
 ```
 
-2. Run the API:
+App URLs:
+
+- API base: http://localhost:8080/api/v1
+- Health: http://localhost:8080/health
+- Swagger UI: http://localhost:8080/swagger/index.html
+- OpenAPI JSON: http://localhost:8080/openapi/doc.json
+
+If you’re using Atlas only, you can choose to start only the API service:
 
 ```pwsh
+docker compose up -d --build api
+```
+
+## Run natively (without Docker)
+
+Prereqs: Go 1.22+, a running MongoDB (local or Atlas), and a `.env` file.
+
+```pwsh
+# Ensure Mongo is reachable (e.g., local: mongodb://localhost:27017 or Atlas URI in .env)
 go run ./...
 ```
 
-The API listens on http://localhost:8080.
-
-Health check: http://localhost:8080/health
-
-Swagger UI: http://localhost:8080/swagger/index.html
-
-## Docker
-
-Build and run both MongoDB and the API:
-
-```pwsh
-docker compose up --build
-```
-
-## API
+## API overview
 
 Base path: `/api/v1`
+
+Animals
 
 - POST `/animals`
 - GET `/animals`
@@ -55,7 +57,25 @@ Base path: `/api/v1`
 - PUT `/animals/{id}`
 - DELETE `/animals/{id}`
 
-Example body:
+Categories
+
+- POST `/categories`
+- GET `/categories`
+- GET `/categories/{id}`
+- PUT `/categories/{id}`
+- DELETE `/categories/{id}`
+
+Species
+
+- POST `/species`
+- GET `/species`
+- GET `/species/{id}`
+- PUT `/species/{id}`
+- DELETE `/species/{id}`
+
+### Animals request examples
+
+Minimal (our schema):
 
 ```json
 {
@@ -66,25 +86,39 @@ Example body:
 }
 ```
 
-Query params for listing:
+Dataset-style (aliases supported) + geo:
 
-- `species=cat`
-- `name=lu` (contains, case-insensitive)
+```json
+{
+  "animal_name": "Gustave",
+  "species": "642d1e873e9c108f66a50009",
+  "birthdate": "2001-04-03",
+  "adopted": false,
+  "image": "https://example.com/img/gator.jpg",
+  "owner": "City Shelter",
+  "location": { "type": "Point", "coordinates": [24.94, 60.17] }
+}
+```
+
+List query params:
+
+- `species=cat` or `species=642d1e...` (matches string or ObjectId)
+- `name=lu` (contains; matches `name` or `animal_name`, case-insensitive)
 - `minAge=1&maxAge=5`
 - `adopted=true`
-- `sort=age&order=asc`
+- `sort=age|name|createdAt|birthdate|animal_name` and `order=asc|desc`
 - `page=1&limit=10`
 
-## Configuration
+Notes:
 
-Environment variables:
+- If `birthdate` exists, age is derived when not provided.
+- `location.coordinates` follows GeoJSON order: [longitude, latitude].
 
-- `PORT` (default 8080)
-- `MONGO_URI` (default mongodb://localhost:27017)
-- `MONGO_DB` (default goapi)
+## Swagger/OpenAPI
 
-## Notes
+- UI: `/swagger/index.html`
+- Spec JSON: `/openapi/doc.json` (static file at `docs/swagger.json`)
 
-- For richer Swagger docs, install `swag` CLI and run `swag init` to generate the docs from annotations.
+## Development
 
-# go-api
+- Health check: GET `/health`

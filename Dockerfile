@@ -12,7 +12,7 @@ COPY --from=builder /out/app /app
 COPY --from=builder /app/docs/swagger.json /docs/swagger.json
 ENV PORT=8080
 ENV MONGO_URI=mongodb://mongo:27017
-ENV MONGO_DB=goapi
+ENV MONGO_DB=palvelinohjelmointi
 EXPOSE 8080
 USER nonroot:nonroot
 ENTRYPOINT ["/app"]

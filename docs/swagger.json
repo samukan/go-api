@@ -12,14 +12,23 @@
         "summary": "List animals",
         "parameters": [
           { "name": "species", "in": "query", "schema": { "type": "string" } },
-          { "name": "name", "in": "query", "schema": { "type": "string" } },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Matches either name or animal_name (case-insensitive contains)",
+            "schema": { "type": "string" }
+          },
           { "name": "minAge", "in": "query", "schema": { "type": "integer" } },
           { "name": "maxAge", "in": "query", "schema": { "type": "integer" } },
           { "name": "adopted", "in": "query", "schema": { "type": "boolean" } },
           {
             "name": "sort",
             "in": "query",
-            "schema": { "type": "string", "enum": ["createdAt", "name", "age"] }
+            "description": "Supports createdAt, name, age, birthdate (if present), and animal_name",
+            "schema": {
+              "type": "string",
+              "enum": ["createdAt", "name", "age", "birthdate", "animal_name"]
+            }
           },
           {
             "name": "order",
@@ -30,7 +39,25 @@
           { "name": "limit", "in": "query", "schema": { "type": "integer" } }
         ],
         "responses": {
-          "200": { "description": "OK" }
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": { "$ref": "#/components/schemas/Animal" }
+                    },
+                    "page": { "type": "integer" },
+                    "limit": { "type": "integer" },
+                    "total": { "type": "integer" }
+                  }
+                }
+              }
+            }
+          }
         }
       },
       "post": {
@@ -96,6 +123,174 @@
         ],
         "responses": { "204": { "description": "No Content" } }
       }
+    },
+    "/categories": {
+      "get": {
+        "summary": "List categories",
+        "parameters": [
+          { "name": "name", "in": "query", "schema": { "type": "string" } },
+          {
+            "name": "sort",
+            "in": "query",
+            "schema": { "type": "string", "enum": ["createdAt", "name"] }
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "schema": { "type": "string", "enum": ["asc", "desc"] }
+          },
+          { "name": "page", "in": "query", "schema": { "type": "integer" } },
+          { "name": "limit", "in": "query", "schema": { "type": "integer" } }
+        ],
+        "responses": { "200": { "description": "OK" } }
+      },
+      "post": {
+        "summary": "Create category",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Category" }
+            }
+          }
+        },
+        "responses": { "201": { "description": "Created" } }
+      }
+    },
+    "/categories/{id}": {
+      "get": {
+        "summary": "Get category",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "OK" },
+          "404": { "description": "Not Found" }
+        }
+      },
+      "put": {
+        "summary": "Update category",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Category" }
+            }
+          }
+        },
+        "responses": { "200": { "description": "OK" } }
+      },
+      "delete": {
+        "summary": "Delete category",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": { "204": { "description": "No Content" } }
+      }
+    },
+    "/species": {
+      "get": {
+        "summary": "List species",
+        "parameters": [
+          { "name": "name", "in": "query", "schema": { "type": "string" } },
+          { "name": "category", "in": "query", "schema": { "type": "string" } },
+          {
+            "name": "sort",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": ["createdAt", "name", "species_name"]
+            }
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "schema": { "type": "string", "enum": ["asc", "desc"] }
+          },
+          { "name": "page", "in": "query", "schema": { "type": "integer" } },
+          { "name": "limit", "in": "query", "schema": { "type": "integer" } }
+        ],
+        "responses": { "200": { "description": "OK" } }
+      },
+      "post": {
+        "summary": "Create species",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Species" }
+            }
+          }
+        },
+        "responses": { "201": { "description": "Created" } }
+      }
+    },
+    "/species/{id}": {
+      "get": {
+        "summary": "Get species",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "OK" },
+          "404": { "description": "Not Found" }
+        }
+      },
+      "put": {
+        "summary": "Update species",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Species" }
+            }
+          }
+        },
+        "responses": { "200": { "description": "OK" } }
+      },
+      "delete": {
+        "summary": "Delete species",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": { "204": { "description": "No Content" } }
+      }
     }
   },
   "components": {
@@ -108,10 +303,45 @@
           "species": { "type": "string" },
           "age": { "type": "integer" },
           "adopted": { "type": "boolean" },
+          "image": { "type": "string", "nullable": true },
+          "owner": { "type": "string", "nullable": true },
+          "location": {
+            "type": "object",
+            "nullable": true,
+            "properties": {
+              "type": { "type": "string", "example": "Point" },
+              "coordinates": {
+                "type": "array",
+                "items": { "type": "number" },
+                "example": [24.941, 60.173]
+              }
+            }
+          },
           "createdAt": { "type": "string", "format": "date-time" },
           "updatedAt": { "type": "string", "format": "date-time" }
         },
         "required": ["name", "species", "age"]
+      },
+      "Category": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        },
+        "required": ["name"]
+      },
+      "Species": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "category": { "type": "string" },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        },
+        "required": ["name"]
       }
     }
   }
