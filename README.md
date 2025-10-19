@@ -121,3 +121,25 @@ Notes:
 ## Development
 
 - Health check: GET `/health`
+
+## Example GET endpoints
+
+Local (default ports):
+
+- Health: http://localhost:8080/health
+- OpenAPI JSON: http://localhost:8080/openapi/doc.json
+- Swagger UI: http://localhost:8080/swagger/index.html
+- List animals: http://localhost:8080/api/v1/animals?limit=5
+- List categories: http://localhost:8080/api/v1/categories?limit=5
+- List species: http://localhost:8080/api/v1/species?limit=5
+- Get animal by id: http://localhost:8080/api/v1/animals/{id}
+
+Azure VM:
+
+- Health: http://go-api.northeurope.cloudapp.azure.com/health
+- OpenAPI JSON: http://go-api.northeurope.cloudapp.azure.com/openapi/doc.json
+- Swagger UI: http://go-api.northeurope.cloudapp.azure.com/swagger/index.html
+- List animals: http://go-api.northeurope.cloudapp.azure.com/api/v1/animals?limit=5
+- List categories: http://go-api.northeurope.cloudapp.azure.com/api/v1/categories?limit=5
+- List species: http://go-api.northeurope.cloudapp.azure.com/api/v1/species?limit=5
+- Get animal by id: http://go-api.northeurope.cloudapp.azure.com/api/v1/animals/{id}
