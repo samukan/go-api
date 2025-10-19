@@ -26,7 +26,7 @@ func NewCategoryController(client *mongo.Client, dbName string) *CategoryControl
     return &CategoryController{Collection: client.Database(dbName).Collection("categories")}
 }
 
-// CreateCategory creates a category (accepts name or category_name)
+// CreateCategory creates a category
 func (cc *CategoryController) CreateCategory(c *gin.Context) {
     type inBody struct {
         Name         string `json:"name"`

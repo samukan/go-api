@@ -23,7 +23,7 @@ import (
 // @schemes http
 
 func main() {
-    // Load .env if present (no error if missing)
+    // Load .env if present
     _ = godotenv.Load()
 
     // Load configuration
@@ -43,7 +43,7 @@ func main() {
         c.JSON(http.StatusOK, gin.H{"status": "ok"})
     })
 
-    // Swagger UI + static doc (serve JSON outside the wildcard prefix to avoid conflicts)
+    // Swagger UI + static doc
     r.GET("/openapi/doc.json", func(c *gin.Context) {
         // support local dev and container path
         candidates := []string{"./docs/swagger.json", "/docs/swagger.json"}
